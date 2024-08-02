@@ -18,7 +18,3 @@ terraform {
     key = "apkas.tfstate"
   }
 }
-
-resource "aws_s3_bucket" "photos" {
-  bucket = "apkas-photos"
-}
