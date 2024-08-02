@@ -1,1 +1,6 @@
 .terraform
+
+__pycache__
+python/sample/*
+!python/sample/01_original.jpg
+!python/sample/02_original.jpg

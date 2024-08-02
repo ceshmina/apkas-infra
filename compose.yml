@@ -2,9 +2,18 @@ services:
   terraform:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/terraform/Dockerfile
     volumes:
       - .:/project
       - ~/.aws/credentials:/root/.aws/credentials
     working_dir: /project
+    command: bash
+
+  lambda:
+    build:
+      context: .
+      dockerfile: docker/lambda/Dockerfile
+    volumes:
+      - .:/project
+    working_dir: /project/python
     command: bash
