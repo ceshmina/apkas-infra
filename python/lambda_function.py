@@ -1,4 +1,8 @@
+import json
+
 from PIL import Image
+from PIL.ExifTags import TAGS
+from PIL.TiffImagePlugin import IFDRational
 
 
 def resize(input_path: str, output_path: str, size: int):
@@ -29,3 +33,21 @@ def crop_center(input_path: str, output_path: str):
     bottom = top + new_height
     cropped = image.crop((left, top, right, bottom))
     cropped.save(output_path)
+
+
+def extract_exif(input_path: str, output_path: str):
+    image = Image.open(input_path)
+    exif_raw = image._getexif()
+
+    def _format_value(value):
+        if isinstance(value, bytes):
+            return value.decode('utf-8')
+        if isinstance(value, IFDRational):
+            return value.numerator / value.denominator
+        if isinstance(value, tuple):
+            return [_format_value(v) for v in value]
+        return value
+
+    exif = { TAGS.get(tag, tag): _format_value(value) for tag, value in exif_raw.items() }
+    with open(output_path, 'w') as f:
+        json.dump(exif, f, indent=2)
