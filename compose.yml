@@ -1,0 +1,10 @@
+services:
+  terraform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/project
+      - ~/.aws/credentials:/root/.aws/credentials
+    working_dir: /project
+    command: bash
