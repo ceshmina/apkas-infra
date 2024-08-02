@@ -1,5 +1,6 @@
 .terraform
 
+lambda_function.zip
 __pycache__
 python/sample/*
 !python/sample/01_original.jpg

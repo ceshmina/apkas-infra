@@ -31,3 +31,10 @@ Lambdaで使うスクリプト用のコンテナが用意されています。�
 docker compose run --rm lambda
 python3.11 test_local.py
 ```
+
+Lambdaにデプロイする場合は、事前にzipアーカイブを作成してください。
+
+```sh
+docker compose run --rm lambda
+bash zip.sh
+```
