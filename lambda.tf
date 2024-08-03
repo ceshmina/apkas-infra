@@ -1,16 +1,16 @@
-resource "aws_lambda_function" "photos" {
+resource "aws_lambda_function" "photos_pipeline" {
   function_name = "photos-pipeline"
   architectures = ["arm64"]
   runtime = "python3.11"
   filename = "lambda_function.zip"
   handler = "lambda_function.lambda_handler"
   source_code_hash = filebase64sha256("python/lambda_function.py")
-  role = aws_iam_role.photos.arn
+  role = aws_iam_role.photos_pipeline.arn
   memory_size = 1024
   timeout = 60
 }
 
-resource "aws_iam_role" "photos" {
+resource "aws_iam_role" "photos_pipeline" {
   name = "photos-pipeline-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -24,7 +24,7 @@ resource "aws_iam_role" "photos" {
   })
 }
 
-resource "aws_iam_policy" "photos" {
+resource "aws_iam_policy" "photos_pipeline" {
   name = "photos-pipeline-policy"
   policy = jsonencode({
     Version = "2012-10-17",
@@ -58,7 +58,7 @@ resource "aws_iam_policy" "photos" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "photos" {
-  role = aws_iam_role.photos.name
-  policy_arn = aws_iam_policy.photos.arn
+resource "aws_iam_role_policy_attachment" "photos_pipeline" {
+  role = aws_iam_role.photos_pipeline.name
+  policy_arn = aws_iam_policy.photos_pipeline.arn
 }
