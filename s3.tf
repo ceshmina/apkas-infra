@@ -22,3 +22,13 @@ resource "aws_s3_bucket_policy" "photos" {
     }]
   })
 }
+
+resource "aws_s3_bucket_notification" "photos_put" {
+  bucket = aws_s3_bucket.photos.bucket
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.photos_pipeline.arn
+    events = ["s3:ObjectCreated:*"]
+    filter_prefix = "original/"
+    filter_suffix = ".jpg"
+  }
+}

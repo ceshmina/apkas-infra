@@ -10,6 +10,13 @@ resource "aws_lambda_function" "photos_pipeline" {
   timeout = 60
 }
 
+resource "aws_lambda_permission" "photos_pipeline" {
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.photos_pipeline.function_name
+  principal = "s3.amazonaws.com"
+  source_arn = aws_s3_bucket.photos.arn
+}
+
 resource "aws_iam_role" "photos_pipeline" {
   name = "photos-pipeline-role"
   assume_role_policy = jsonencode({
