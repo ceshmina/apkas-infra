@@ -3,6 +3,12 @@ provider "aws" {
   profile = "apkas-terraform-dev"
 }
 
+provider "aws" {
+  alias  = "virginia"
+  region = "us-east-1"
+  profile = "apkas-terraform-dev"
+}
+
 terraform {
   required_version = ">= 1.9.3"
   required_providers {

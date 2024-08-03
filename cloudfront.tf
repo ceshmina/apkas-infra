@@ -12,6 +12,7 @@ resource "aws_cloudfront_distribution" "photos" {
     origin_access_control_id = aws_cloudfront_origin_access_control.photos.id
   }
   enabled = true
+  aliases = ["photos.apkas.net"]
   default_cache_behavior {
     target_origin_id = aws_s3_bucket.photos.bucket_regional_domain_name
     viewer_protocol_policy = "redirect-to-https"
@@ -33,6 +34,8 @@ resource "aws_cloudfront_distribution" "photos" {
     }
   }
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.photos.arn
+    ssl_support_method = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }
