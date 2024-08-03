@@ -4,10 +4,10 @@ resource "aws_s3_bucket" "photos" {
 
 resource "aws_s3_bucket_public_access_block" "photos" {
   bucket = aws_s3_bucket.photos.bucket
-  block_public_acls = false
-  block_public_policy = false
-  ignore_public_acls = false
-  restrict_public_buckets = false
+  block_public_acls = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_policy" "photos" {
@@ -16,9 +16,16 @@ resource "aws_s3_bucket_policy" "photos" {
     Version = "2012-10-17",
     Statement = [{
       Effect = "Allow",
-      Principal = "*",
+      Principal = {
+        Service = "cloudfront.amazonaws.com"
+      },
       Action = ["s3:GetObject"],
-      Resource = ["${aws_s3_bucket.photos.arn}/*"]
+      Resource = ["${aws_s3_bucket.photos.arn}/*"],
+      Condition = {
+        StringEquals = {
+          "aws:SourceArn" = aws_cloudfront_distribution.photos.arn
+        }
+      }
     }]
   })
 }
