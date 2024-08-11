@@ -2,6 +2,14 @@ data "aws_route53_zone" "apkas" {
   name = "apkas.net."
 }
 
+resource "aws_route53_record" "diary" {
+  zone_id = data.aws_route53_zone.apkas.zone_id
+  name = "diary.apkas.net"
+  type = "CNAME"
+  ttl = 300
+  records = ["ceshmina.github.io"]
+}
+
 resource "aws_route53_record" "photos" {
   zone_id = data.aws_route53_zone.apkas.zone_id
   name = "photos.apkas.net"
