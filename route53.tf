@@ -2,6 +2,19 @@ data "aws_route53_zone" "apkas" {
   name = "apkas.net."
 }
 
+resource "aws_route53_record" "root" {
+  zone_id = data.aws_route53_zone.apkas.zone_id
+  name = "apkas.net"
+  type = "A"
+  ttl = 300
+  records = [
+    "185.199.108.153",
+    "185.199.109.153",
+    "185.199.110.153",
+    "185.199.111.153"
+  ]
+}
+
 resource "aws_route53_record" "diary" {
   zone_id = data.aws_route53_zone.apkas.zone_id
   name = "diary.apkas.net"
