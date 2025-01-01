@@ -13,7 +13,7 @@ resource "aws_security_group_rule" "fastapi_sample_inbound" {
   security_group_id = aws_security_group.fastapi_sample.id
   type = "ingress"
   from_port = 80
-  to_port = 8000
+  to_port = 80
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
@@ -32,9 +32,14 @@ resource "aws_iam_role" "fastapi_sample" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "fastapi_sample" {
+resource "aws_iam_role_policy_attachment" "fastapi_sample_ecs" {
   role = aws_iam_role.fastapi_sample.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "fastapi_sample_ecr" {
+  role = aws_iam_role.fastapi_sample.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ecs_cluster" "fastapi_sample" {
@@ -67,11 +72,15 @@ resource "aws_ecs_task_definition" "fastapi_sample" {
       image = "${aws_ecr_repository.fastapi_sample.repository_url}:latest"
       portMappings = [
         {
-          hostPort = 8000
-          containerPort = 8000
+          hostPort = 80
+          containerPort = 80
           protocol = "tcp"
         }
       ]
     }
   ])
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture = "ARM64"
+  }
 }
