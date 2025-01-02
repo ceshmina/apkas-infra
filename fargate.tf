@@ -68,12 +68,29 @@ resource "aws_ecs_task_definition" "fastapi_sample" {
   execution_role_arn = aws_iam_role.fastapi_sample.arn
   container_definitions = jsonencode([
     {
-      name = "fastapi-sample"
-      image = "${aws_ecr_repository.fastapi_sample.repository_url}:latest"
+      name = "nginx"
+      image = "${aws_ecr_repository.fastapi_sample_nginx.repository_url}:latest"
       portMappings = [
         {
           hostPort = 80
           containerPort = 80
+          protocol = "tcp"
+        }
+      ]
+      dependsOn = [
+        {
+          containerName = "python"
+          condition = "START"
+        }
+      ]
+    },
+    {
+      name = "python"
+      image = "${aws_ecr_repository.fastapi_sample_python.repository_url}:latest"
+      portMappings = [
+        {
+          hostPort = 8000
+          containerPort = 8000
           protocol = "tcp"
         }
       ]
